@@ -3,10 +3,8 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-# This workflow will build, test, sign and package a WPF or Windows Forms desktop application
+# This workflow will build, test, sign and package a desktop application
 # built on .NET Core.
-# To learn how to migrate your existing application to .NET Core,
-# refer to https://docs.microsoft.com/en-us/dotnet/desktop-wpf/migration/convert-project-from-net-framework
 #
 # To configure this workflow:
 #
@@ -77,5 +75,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4.3.6
       with:
-        name: MSIX Package
-        path: ${{ env.Solution_Name }}\bin\Release\net8.0
+        name: App Package
+        path: .\bin\${{ matrix.configuration }}\net8.0
