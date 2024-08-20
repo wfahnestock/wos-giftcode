@@ -207,17 +207,19 @@ class Program
     {
         string playersFile = Path.Combine(Directory.GetCurrentDirectory(), "players.txt");
         string giftCodesFile = Path.Combine(Directory.GetCurrentDirectory(), "codes.txt");
-        List<string> playersList = new List<string>();
-        List<string> codesList = new List<string>();
+        List<string> playersList = new();
+        List<string> codesList = new();
 
         using (StreamReader sr = new(playersFile))
         {
             Console.WriteLine("Reading players.txt...");
-            string line;
 
-            while ((line = sr.ReadLine()) != null)
+            if (playersList.Count <= 0)
             {
-                playersList.Add(line.Trim());
+                while (sr.ReadLine() is { } line)
+                {
+                    playersList.Add(line.Trim());
+                }
             }
             
             Console.WriteLine("Done!");
@@ -226,17 +228,19 @@ class Program
         using (StreamReader sr = new(giftCodesFile))
         {
             Console.WriteLine("Reading codes.txt...");
-            string line;
 
-            while ((line = sr.ReadLine()) != null)
+            if (codesList.Count <= 0)
             {
-                codesList.Add(line.Trim());
+                while (sr.ReadLine() is { } line)
+                {
+                    codesList.Add(line.Trim());
+                }
             }
             
             Console.WriteLine("Done!");
         }
 
-        foreach (string player in playersList)
+        for (int i = playersList.Count - 1; i >= 0; i--)
         {
             IWebElement? playerIdElement = null;
 
@@ -244,7 +248,7 @@ class Program
             {
                 // Wait for the page to load to find the first element. We assume the page is already loaded for subsequent attempts
                 // at finding an element.
-                WebDriverWait wait = new WebDriverWait(_driver, new TimeSpan(0, 0, 10));
+                WebDriverWait wait = new(_driver, new TimeSpan(0, 0, 10));
                 playerIdElement = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div/div/div/div[3]/div[2]/div[1]/div[1]/div[1]/input")));
             }
             catch (NoSuchElementException ex)
@@ -260,7 +264,7 @@ class Program
             }
             
             // Enter the player ID
-            playerIdElement.SendKeys(player);
+            playerIdElement.SendKeys(playersList[i]);
             
             IWebElement? loginButtonElement = null;
             try
@@ -300,10 +304,9 @@ class Program
             if (!playerAccountFound)
             {
                 Console.WriteLine("Could not find player '{0}' within 4 retries... Check Player ID and try again.", playerIdElement.Text);
-                Console.WriteLine("Press any key to return to the menu...");
-                Console.ReadLine();
-                _driver.Dispose();
-                Main();
+                // remove the player from the list
+                playersList.RemoveAt(i);
+                BatchMode();
             }
 
             foreach (string giftCode in codesList)
@@ -411,7 +414,7 @@ class Program
                 }
             }
             
-            Console.WriteLine("Finished processing {0} gift codes for player {1}", codesList.Count, player);
+            Console.WriteLine("Finished processing {0} gift codes for player {1}", codesList.Count, playersList[i]);
             IWebElement? retreatButton = null;
             try
             {
