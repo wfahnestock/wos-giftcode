@@ -47,7 +47,6 @@ class Program
         
         Console.Write("Enter your Player ID: ");
 
-        // TODO: .txt list of player IDs
         String playerId = "";
 
         while (string.IsNullOrWhiteSpace(playerId))
