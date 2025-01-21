@@ -9,7 +9,7 @@ class Program
     /*
      * Selenium WebDriver config
      */
-    private static IWebDriver? _driver = null;
+    private static FirefoxDriver? _driver = null;
     private static FirefoxOptions _driverOptions = new FirefoxOptions();
     
     private static void Main()
@@ -26,7 +26,7 @@ class Program
         Console.WriteLine("");
 
         int choice;
-        while (!Int32.TryParse(Console.ReadLine(), out choice))
+        while (!int.TryParse(Console.ReadLine(), out choice))
         {
             Console.Write("Your choice: ");
         }
@@ -47,7 +47,7 @@ class Program
         
         Console.Write("Enter your Player ID: ");
 
-        String playerId = "";
+        string playerId = "";
 
         while (string.IsNullOrWhiteSpace(playerId))
         {
@@ -175,7 +175,7 @@ class Program
                     break;
                 }
 
-                if (modal.Text.Contains("Gift Code not found!"))
+                if (modal.Text.Contains("Gift Code not found"))
                 {
                     // Message was that this gift code was invalid.
                     Console.WriteLine("Gift code '{0}' is invalid!", giftCode);
@@ -374,7 +374,7 @@ class Program
                             }
                         }
 
-                        if (modal.Text.Contains("Gift Code not found!"))
+                        if (modal.Text.Contains("Gift Code not found"))
                         {
                             // Message was that this gift code was invalid.
                             Console.WriteLine("Gift code '{0}' is invalid!", giftCode);
