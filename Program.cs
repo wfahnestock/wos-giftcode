@@ -345,72 +345,68 @@ class Program
         
                 confirmButton.Click();
                 
-                count = 0;
-        
-                while (count <= 4)
+                while (!IsElementPresent(By.CssSelector(".message_modal .modal_content[data-v-5b685826]")))
                 {
-                    if (IsElementPresent(By.CssSelector(".message_modal .modal_content[data-v-5b685826]")))
-                    {
-                        IWebElement modal =
-                            _driver.FindElement(By.CssSelector(".message_modal .modal_content[data-v-5b685826]"));
-                        IWebElement? modalConfirmButton = null;
-
-                        if (modal.Text.Contains("Already claimed, unable to claim again."))
-                        {
-                            // Message was that this gift code was already claimed.
-                            Console.WriteLine("Gift code {0} was already claimed by this player!", giftCode);
-
-                            try
-                            {
-                                modalConfirmButton = _driver.FindElement(By.XPath("/html/body/div/div/div[2]/div[2]/div[2]"));
-                                modalConfirmButton.Click();
-                                continue;
-                            }
-                            catch (NoSuchElementException ex)
-                            {
-                                Console.WriteLine("Error while trying to find confirm button element. Message:");
-                                Console.WriteLine("{0}", ex.Message);
-                                Console.ReadKey();
-                            }
-                        }
-
-                        if (modal.Text.Contains("Gift Code not found"))
-                        {
-                            // Message was that this gift code was invalid.
-                            Console.WriteLine("Gift code '{0}' is invalid!", giftCode);
-                            try
-                            {
-                                modalConfirmButton = _driver.FindElement(By.XPath("/html/body/div/div/div[2]/div[2]/div[2]"));
-                                modalConfirmButton.Click();
-                                continue;
-                            }
-                            catch (NoSuchElementException ex)
-                            {
-                                Console.WriteLine("Error while trying to find confirm button element. Message:");
-                                Console.WriteLine("{0}", ex.Message);
-                                Console.ReadKey();
-                            }
-                        }
-
-                        Console.WriteLine("Successfully redeemed gift code: {0}!", giftCode);
-                        try
-                        {
-                            modalConfirmButton = _driver.FindElement(By.XPath("/html/body/div/div/div[2]/div[2]/div[2]"));
-                            modalConfirmButton.Click();
-                            continue;
-                        }
-                        catch (NoSuchElementException ex)
-                        {
-                            Console.WriteLine("Error while trying to find confirm button element. Message:");
-                            Console.WriteLine("{0}", ex.Message);
-                            Console.ReadKey();
-                        }
-                    }
-                    
-                    Thread.Sleep(500);
-
-                    count++;
+                    // Wait for the modal to appear, sometimes it may not be instant.
+                    Thread.Sleep(250);
                 }
+                
+                IWebElement modal =
+                    _driver.FindElement(By.CssSelector(".message_modal .modal_content[data-v-5b685826]"));
+                IWebElement? modalConfirmButton = null;
+                
+                if (modal.Text.Contains("Already claimed, unable to claim again."))
+                {
+                    // Message was that this gift code was already claimed.
+                    Console.WriteLine("Gift code {0} was already claimed by this player!", giftCode);
+                
+                    try
+                    {
+                        modalConfirmButton = _driver.FindElement(By.XPath("/html/body/div/div/div[2]/div[2]/div[2]"));
+                        modalConfirmButton.Click();
+                        continue;
+                    }
+                    catch (NoSuchElementException ex)
+                    {
+                        Console.WriteLine("Error while trying to find confirm button element. Message:");
+                        Console.WriteLine("{0}", ex.Message);
+                        Console.ReadKey();
+                    }
+                } 
+                else if (modal.Text.Contains("Gift Code not found")) 
+                {
+                    // Message was that this gift code was invalid.
+                    Console.WriteLine("Gift code '{0}' is invalid!", giftCode);
+                    try
+                    {
+                        modalConfirmButton = _driver.FindElement(By.XPath("/html/body/div/div/div[2]/div[2]/div[2]"));
+                        modalConfirmButton.Click();
+                        continue;
+                    }
+                    catch (NoSuchElementException ex)
+                    {
+                        Console.WriteLine("Error while trying to find confirm button element. Message:");
+                        Console.WriteLine("{0}", ex.Message);
+                        Console.ReadKey();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Successfully redeemed gift code: {0}!", giftCode);
+                    try
+                    {
+                        modalConfirmButton = _driver.FindElement(By.XPath("/html/body/div/div/div[2]/div[2]/div[2]"));
+                        modalConfirmButton.Click();
+                        continue;
+                    }
+                    catch (NoSuchElementException ex)
+                    {
+                        Console.WriteLine("Error while trying to find confirm button element. Message:");
+                        Console.WriteLine("{0}", ex.Message);
+                        Console.ReadKey();
+                    }
+                }
+                
             }
             
             Console.WriteLine("Finished processing {0} gift codes for player {1}", codesList.Count, playersList[i]);
