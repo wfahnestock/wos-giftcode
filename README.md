@@ -1,3 +1,6 @@
+# Archived 08/04/2025
+Century Game has changed their website in a way that redeeming gift codes automatically is not possible anymore, so this repository has been archived. 
+
 # Whiteout Survival Giftcode Redeemer
 ### NOTE: THIS <u>DOES NOT</u> "GENERATE" GIFT CODES. THIS SIMPLY AUTOMATICALLY REDEEMS <u>VALID</u> GIFT CODES THROUGH THEIR WEBSITE.
 
